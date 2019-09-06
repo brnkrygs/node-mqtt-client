@@ -32,18 +32,18 @@ async function run() {
 }
 
 function wait( thing ){
-    process.stdin.setRawMode(true);
-    process.stdin.resume();
-    process.stdin.on('data', async () => {
-      try{
-        if( thing )
-          await thing.disconnect();
-        process.exit(0);
-      } catch( err ){
-        console.error( 'Caught error on shutdown:', err );
-        process.exit(1);
-      }
-    });
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  process.stdin.on('data', async () => {
+    try{
+      if( thing )
+        await thing.disconnect();
+      process.exit(0);
+    } catch( err ){
+      console.error( 'Caught error on shutdown:', err );
+      process.exit(1);
+    }
+  });
 }
 
 /**
