@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "eslint": "^6.3.0"
+  },
+  "dependencies": {
+    "mqtt": "^3.0.0"
   }
 }
