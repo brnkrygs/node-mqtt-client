@@ -3,8 +3,10 @@ const Thing = require( './Thing' );
 /* CONSTANTS */
 const BROKER = 'mqtts://a1tft8wvhqy4pm-ats.iot.us-east-1.amazonaws.com:8883';
 
+/**
+ * Entry point
+ */
 async function run() {
-
   console.log( 'Running (Press any key to exit)...' );
 
   try {
@@ -23,21 +25,25 @@ async function run() {
     console.log( '..waiting for messages\n--------' );
 
     wait( connTestThing );
-  } catch ( e ){
-    console.log( '..caught error:')
-    console.error( e );
+  } catch( err ){
+    console.error( 'Caught error:', err );
     process.exit( 1 );
   }
 }
 
 function wait( thing ){
-  process.stdin.setRawMode(true);
-  process.stdin.resume();
-  process.stdin.on('data', async () => {
-    if( thing )
-      await thing.disconnect();
-    process.exit(0);
-  });
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.on('data', async () => {
+      try{
+        if( thing )
+          await thing.disconnect();
+        process.exit(0);
+      } catch( err ){
+        console.error( 'Caught error on shutdown:', err );
+        process.exit(1);
+      }
+    });
 }
 
 /**
@@ -46,10 +52,15 @@ function wait( thing ){
  * @param {Buffer} message 
  */
 function logMessage( topic, message ){
-  console.log( `..message received on topic: ${topic}` );
-  console.log( message.toString())
-  console.log( '' );
+  try{
+    console.log( `..message received on topic: ${topic}` );
+    console.log( message.toString())
+    console.log( '' );
+  } catch( err ){
+    console.error( 'Caught error in logMessage():', err );
+  }
 }
 
+// Start listener
 run()
   .catch( err => console.error( err ));
